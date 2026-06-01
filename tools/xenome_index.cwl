@@ -8,7 +8,7 @@ requirements:
     ramMin: ${ return inputs.ram * 1000 }
     coresMin: $(inputs.cores)
   - class: DockerRequirement
-    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/xenome2' #replace with pgc-images.sbgenomics.com/d3b-bixu/xenome2?
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/xenome2' 
 baseCommand: [mkdir]
 arguments:
   - position: 1
@@ -22,7 +22,7 @@ arguments:
       -G $(inputs.graft_fasta.path)
       -v
       --prefix $(inputs.output_basename)/$(inputs.output_basename)
-      && tar -czf $(inputs.output_basename).tgz $(inputs.output_basename) #replace && tar -czf $(inputs.output_basename).tgz $(inputs.output_basename)
+      && tar -czf $(inputs.output_basename).tgz $(inputs.output_basename) 
 
 inputs:
   host_fasta: {type: File, doc: "Fasta file of organism hosting foreign tissue"}
