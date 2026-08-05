@@ -62,7 +62,8 @@ outputs:
   fastp_adapter_json: {type: 'File[]?', outputSource: preprocess_reads/fastp_json, doc: "fastp adapter detection JSON reports (one per
       processed reads record, for both SE and PE inputs). Contains detected adapter sequences and QC metrics."}
   fastp_adapter_html: {type: 'File[]?', outputSource: preprocess_reads/fastp_html, doc: "fastp adapter detection HTML reports (one per
-      processed reads record, for both SE and PE inputs)."}  
+      processed reads record, for both SE and PE inputs)."}
+  xenome_classify_stats: {type: 'File', outputSource: xenome_classify/output_stats, "Output stats file from Xenome Classify"}
 
 steps:
   # steps will be: preprocess reads from RNA wf, pull out fastqs, run subtraction, run compression
@@ -133,6 +134,7 @@ steps:
       cores: cores
       ram: ram
       idx_prefix: idx_prefix
+      is_paired_end: is_paired_end
       fastq_reads: extract_reads_from_record/reads
       output_basename: basename_picker/outname
     out: [graft_fastqs, host_fastqs, output_stats]

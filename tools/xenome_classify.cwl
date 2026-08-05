@@ -19,7 +19,7 @@ arguments:
     shellQuote: false
     valueFrom: >-
       && xenome classify
-      --pairs
+      ${ return inputs.is_paired_end === true ? "--pairs" : ""; }
       -M ${ return Math.floor(inputs.ram * (4/5)) }
       --output-filename-prefix $(inputs.output_basename)
   - position: 5
@@ -34,6 +34,7 @@ inputs:
   cores: {type: "int?", inputBinding: {prefix: -T, position: 4}, doc: "Num cores to use", default: 8}
   ram: {type: "int?", doc: "Mem to use in GB", default: 8}
   idx_prefix: {type: string, inputBinding: {prefix: -P, position: 4}, doc: "String prefix of index files when decompressed"}
+  is_paired_end: {type: 'boolean?', doc: "For alignment files inputs, are the reads paired end?"}
   fastq_reads: 
     type:
       type: array
