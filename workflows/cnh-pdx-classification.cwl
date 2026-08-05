@@ -25,7 +25,7 @@ inputs:
   # Xenome specific
   xenome_index: {type: File, doc: "Xenome index made form host and graft fasta",
     "sbg:suggestedValue": {class: File, path: 6a736b9b0493ff749a1b06fb, name: GRCh38_graft_GRCm39.vM38_host.tgz}}
-  idx_prefix: {type: string, doc: "String prefix of index files when decompressed", default: "GRCh38_graft_GRCm39.vM38_host"}
+  idx_prefix: {type: "string?", doc: "String prefix of index files when decompressed", default: "GRCh38_graft_GRCm39.vM38_host"}
   host_name: {type: "string?", doc: "name to use describing model organism receiving graft", default: "mouse"}
   graft_name: {type: "string?", doc: "name to use describing organism that grafted tissue came from", default: "human"}
 
