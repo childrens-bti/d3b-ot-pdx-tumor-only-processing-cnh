@@ -84,7 +84,6 @@ The workflow includes Seven Bridges/Cavatica extensions but is otherwise structu
 | [`tools/extract_reads_from_record.cwl`](tools/extract_reads_from_record.cwl) | Flattens processed reads records into a FASTQ file array |
 | [`tools/sbg_compressor.cwl`](tools/sbg_compressor.cwl) | Seven Bridges compression utility used for workflow outputs |
 | [`tools/sbg_decompressor.cwl`](tools/sbg_decompressor.cwl) | Legacy Seven Bridges decompression utility |
-| [`Dockerfile`](Dockerfile) | Docker recipe for the Gossamer/Xenome image |
 
 ## License
 
