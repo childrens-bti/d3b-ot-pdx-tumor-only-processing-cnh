@@ -32,15 +32,11 @@ inputs:
   # main inputs
   sample_name: {type: 'string', doc: "Sample ID of the input reads"}
   output_basename: {type: 'string', doc: "String to use as basename for outputs"}
-  input_alignment_files: {type: 'File[]?', secondaryFiles: [{"pattern": "^.bai", required: false}, {"pattern": ".bai", required: false},
-      {"pattern": "^.crai", required: false}, {"pattern": ".crai", required: false}], doc: "List of input SAM/BAM/CRAM files to process"}
   input_pe_reads: {type: 'File[]?', doc: "List of R1 paired end FASTQ files to process"}
   input_pe_mates: {type: 'File[]?', doc: "List of R2 paired end FASTQ files to process"}
   input_se_reads: {type: 'File[]?', doc: "List of single end FASTQ files to process"}
   input_pe_rg_strs: {type: 'string[]?', doc: "List of RG strings to use in PE processing"}
   input_se_rg_strs: {type: 'string[]?', doc: "List of RG strings to use in SE processing"}
-  cram_reference: {type: 'File?', secondaryFiles: [.fai], doc: "If any input alignment files are CRAM, provide the reference used
-      to create them"}
   is_paired_end: {type: 'boolean?', doc: "For alignment files inputs, are the reads paired end?"}
   r1_adapter: {type: 'string?', doc: "!Warning this will be applied to all R1 reads (PE, SE, and reads from alignment files)! If you
       have multiple adapters, manually trim your reads before input. If they share the same adapter, supply adapter here"}
@@ -66,29 +62,14 @@ outputs:
   xenome_classify_stats: {type: 'File', outputSource: xenome_classify/output_stats, "Output stats file from Xenome Classify"}
 
 steps:
-  # steps will be: preprocess reads from RNA wf, pull out fastqs, run subtraction, run compression
-  samtools_split:
-    run: https://raw.githubusercontent.com/childrens-bti/kf-rnaseq-workflow-cnh/v1.2.4/tools/samtools_split.cwl
-    when: $(inputs.input_reads != null)
-    scatter: [input_reads]
-    scatterMethod: dotproduct
-    in:
-      input_reads: input_alignment_files
-      reference: cram_reference
-    out: [bam_files]
   lists_to_reads_records:
     run: https://raw.githubusercontent.com/childrens-bti/kf-rnaseq-workflow-cnh/v1.2.4/subworkflows/lists_to_reads_records.cwl
     in:
-      input_alignment_files:
-        source: samtools_split/bam_files
-        valueFrom: |
-          $(self == null || self.every(function(e) { return e == null}) ? null : self.filter(function(e) { return e != null }).reduce(function(e,i) { return e.concat(i) }))
       input_pe_reads: input_pe_reads
       input_pe_mates: input_pe_mates
       input_se_reads: input_se_reads
       input_pe_rg_strs: input_pe_rg_strs
       input_se_rg_strs: input_se_rg_strs
-      cram_reference: cram_reference
       is_paired_end: is_paired_end
       r1_adapter: r1_adapter
       r2_adapter: r2_adapter
