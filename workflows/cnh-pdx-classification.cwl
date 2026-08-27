@@ -37,9 +37,9 @@ inputs:
   input_se_reads: {type: 'File[]?', doc: "List of single end FASTQ files to process"}
   input_pe_rg_strs: {type: 'string[]?', doc: "List of RG strings to use in PE processing"}
   input_se_rg_strs: {type: 'string[]?', doc: "List of RG strings to use in SE processing"}
-  keep_ambiguous_fastqs: {type: 'boolean', doc: "Keep reads classified as ambiguous", default: false}
-  keep_both_fastqs: {type: 'boolean', doc: "Keep reads classified as both", default: false}
-  keep_neither_fastqs: {type: 'boolean', doc: "Keep reads classified as neither", default: false}
+  keep_ambiguous_fastqs: {type: 'boolean?', doc: "Keep reads classified as ambiguous", default: false}
+  keep_both_fastqs: {type: 'boolean?', doc: "Keep reads classified as both", default: false}
+  keep_neither_fastqs: {type: 'boolean?', doc: "Keep reads classified as neither", default: false}
   is_paired_end: {type: 'boolean?', doc: "For alignment files inputs, are the reads paired end?"}
   r1_adapter: {type: 'string?', doc: "!Warning this will be applied to all R1 reads (PE, SE, and reads from alignment files)! If you
       have multiple adapters, manually trim your reads before input. If they share the same adapter, supply adapter here"}
