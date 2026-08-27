@@ -233,6 +233,10 @@ inputs:
     Base name of the output archive. This parameter is not applicable for the GZ and BZ2 file formats.
   type: string?
   sbg:altPrefix: -o
+- id: run_if
+  label: Run condition
+  doc: Workflow-only control input used to expose a conditional step input.
+  type: boolean?
 - id: process
   label: Number of processes
   doc: |-

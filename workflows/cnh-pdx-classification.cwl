@@ -129,7 +129,6 @@ steps:
     run: ../tools/sbg_compressor.cwl
     in:
       input_files: xenome_classify/host_fastqs
-      output_basename: basename_picker/outname
       process: cores
       output_format:
         valueFrom: |
@@ -139,10 +138,10 @@ steps:
     out: [output_archives]
   compress_ambiguous_reads:
     run: ../tools/sbg_compressor.cwl
-    when: $(keep_ambiguous_fastqs == true)
+    when: $(inputs.run_if == true)
     in:
+      run_if: keep_ambiguous_fastqs
       input_files: xenome_classify/ambiguous_fastqs
-      output_basename: basename_picker/outname
       process: cores
       output_format:
         valueFrom: |
@@ -152,10 +151,10 @@ steps:
     out: [output_archives]
   compress_both_reads:
     run: ../tools/sbg_compressor.cwl
-    when: $(keep_both_fastqs == true)
+    when: $(inputs.run_if == true)
     in:
+      run_if: keep_both_fastqs
       input_files: xenome_classify/both_fastqs
-      output_basename: basename_picker/outname
       process: cores
       output_format:
         valueFrom: |
@@ -165,10 +164,10 @@ steps:
     out: [output_archives]
   compress_neither_reads:
     run: ../tools/sbg_compressor.cwl
-    when: $(keep_neither_fastqs == true)
+    when: $(inputs.run_if == true)
     in:
+      run_if: keep_neither_fastqs
       input_files: xenome_classify/neither_fastqs
-      output_basename: basename_picker/outname
       process: cores
       output_format:
         valueFrom: |
@@ -180,7 +179,6 @@ steps:
     run: ../tools/sbg_compressor.cwl
     in:
       input_files: xenome_classify/graft_fastqs
-      output_basename: output_basename
       process: cores
       output_format:
         valueFrom: |
