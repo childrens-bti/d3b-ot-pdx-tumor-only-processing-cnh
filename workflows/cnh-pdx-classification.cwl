@@ -37,6 +37,9 @@ inputs:
   input_se_reads: {type: 'File[]?', doc: "List of single end FASTQ files to process"}
   input_pe_rg_strs: {type: 'string[]?', doc: "List of RG strings to use in PE processing"}
   input_se_rg_strs: {type: 'string[]?', doc: "List of RG strings to use in SE processing"}
+  keep_ambiguous_fastqs: {type: 'boolean', doc: "Keep reads classified as ambiguous", default: false}
+  keep_both_fastqs: {type: 'boolean', doc: "Keep reads classified as both", default: false}
+  keep_neither_fastqs: {type: 'boolean', doc: "Keep reads classified as neither", default: false}
   is_paired_end: {type: 'boolean?', doc: "For alignment files inputs, are the reads paired end?"}
   r1_adapter: {type: 'string?', doc: "!Warning this will be applied to all R1 reads (PE, SE, and reads from alignment files)! If you
       have multiple adapters, manually trim your reads before input. If they share the same adapter, supply adapter here"}
@@ -53,6 +56,9 @@ inputs:
 outputs:
   host_fastqs: {type: 'File[]', outputSource: compress_host_reads/output_archives, doc: "Filtered reads coming from host organism."}
   graft_fastqs: {type: 'File[]', outputSource: compress_graft_reads/output_archives, doc: "Filtered reads coming from graft organism."}
+  ambiguous_fastqs: {type: 'File[]?', outputSource: compress_ambiguous_reads/output_archives, doc: "Filtered reads classified as ambiguous."}
+  both_fastqs: {type: 'File[]?', outputSource: compress_both_reads/output_archives, doc: "Filtered reads classified as both."}
+  neither_fastqs: {type: 'File[]?', outputSource: compress_neither_reads/output_archives, doc: "Filtered reads classified as neither."}
   cutadapt_stats: {type: 'File[]?', outputSource: preprocess_reads/cutadapt_stats, doc: "Cutadapt stats output, only if adapter is
       supplied."}
   fastp_adapter_json: {type: 'File[]?', outputSource: preprocess_reads/fastp_json, doc: "fastp adapter detection JSON reports (one per
@@ -118,11 +124,50 @@ steps:
       is_paired_end: is_paired_end
       fastq_reads: extract_reads_from_record/reads
       output_basename: basename_picker/outname
-    out: [graft_fastqs, host_fastqs, output_stats]
+    out: [graft_fastqs, host_fastqs, ambiguous_fastqs, both_fastqs, neither_fastqs, output_stats]
   compress_host_reads:
     run: ../tools/sbg_compressor.cwl
     in:
       input_files: xenome_classify/host_fastqs
+      output_basename: basename_picker/outname
+      process: cores
+      output_format:
+        valueFrom: |
+          ${
+            return "GZ"
+          }
+    out: [output_archives]
+  compress_ambiguous_reads:
+    run: ../tools/sbg_compressor.cwl
+    when: $(keep_ambiguous_fastqs == true)
+    in:
+      input_files: xenome_classify/ambiguous_fastqs
+      output_basename: basename_picker/outname
+      process: cores
+      output_format:
+        valueFrom: |
+          ${
+            return "GZ"
+          }
+    out: [output_archives]
+  compress_both_reads:
+    run: ../tools/sbg_compressor.cwl
+    when: $(keep_both_fastqs == true)
+    in:
+      input_files: xenome_classify/both_fastqs
+      output_basename: basename_picker/outname
+      process: cores
+      output_format:
+        valueFrom: |
+          ${
+            return "GZ"
+          }
+    out: [output_archives]
+  compress_neither_reads:
+    run: ../tools/sbg_compressor.cwl
+    when: $(keep_neither_fastqs == true)
+    in:
+      input_files: xenome_classify/neither_fastqs
       output_basename: basename_picker/outname
       process: cores
       output_format:

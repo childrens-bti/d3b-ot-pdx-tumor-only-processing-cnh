@@ -54,6 +54,18 @@ outputs:
     type: 'File[]'
     outputBinding:
       glob: '*$(inputs.host_name)*.fastq'
+  ambiguous_fastqs:
+    type: 'File[]'
+    outputBinding:
+      glob: '*ambiguous*.fastq'
+  both_fastqs:
+    type: 'File[]'
+    outputBinding:
+      glob: '*both*.fastq'
+  neither_fastqs:
+    type: 'File[]'
+    outputBinding:
+      glob: '*neither*.fastq'
   output_stats:
     type: File
     outputBinding:
