@@ -49,23 +49,23 @@ outputs:
   graft_fastqs:
     type: 'File[]'
     outputBinding:
-      glob: '$(inputs.output_basename)_$(inputs.graft_name).fastq'
+      glob: '$(inputs.output_basename)_$(inputs.graft_name)*.fastq'
   host_fastqs:
     type: 'File[]'
     outputBinding:
-      glob: '$(inputs.output_basename)_$(inputs.host_name).fastq'
+      glob: '$(inputs.output_basename)_$(inputs.host_name)*.fastq'
   ambiguous_fastqs:
     type: 'File[]'
     outputBinding:
-      glob: '$(inputs.output_basename)_ambiguous.fastq'
+      glob: '$(inputs.output_basename)_ambiguous*.fastq'
   both_fastqs:
     type: 'File[]'
     outputBinding:
-      glob: '$(inputs.output_basename)_both.fastq'
+      glob: '$(inputs.output_basename)_both*.fastq'
   neither_fastqs:
     type: 'File[]'
     outputBinding:
-      glob: '$(inputs.output_basename)_neither.fastq'
+      glob: '$(inputs.output_basename)_neither*.fastq'
   output_stats:
     type: File
     outputBinding:
