@@ -40,7 +40,6 @@ inputs:
   keep_ambiguous_fastqs: {type: 'boolean?', doc: "Keep reads classified as ambiguous", default: false}
   keep_both_fastqs: {type: 'boolean?', doc: "Keep reads classified as both", default: false}
   keep_neither_fastqs: {type: 'boolean?', doc: "Keep reads classified as neither", default: false}
-  is_paired_end: {type: 'boolean?', doc: "For alignment files inputs, are the reads paired end?"}
   r1_adapter: {type: 'string?', doc: "!Warning this will be applied to all R1 reads (PE, SE, and reads from alignment files)! If you
       have multiple adapters, manually trim your reads before input. If they share the same adapter, supply adapter here"}
   r2_adapter: {type: 'string?', doc: "!Warning this will be applied to all R2 reads (PE and reads from alignment files)! If you have
@@ -68,6 +67,13 @@ outputs:
   xenome_classify_stats: {type: 'File', outputSource: xenome_classify/output_stats, "Output stats file from Xenome Classify"}
 
 steps:
+  determine_read_layout:
+    run: ../tools/determine_read_layout.cwl
+    in:
+      input_pe_reads: input_pe_reads
+      input_pe_mates: input_pe_mates
+      input_se_reads: input_se_reads
+    out: [is_paired_end]
   lists_to_reads_records:
     run: https://raw.githubusercontent.com/childrens-bti/kf-rnaseq-workflow-cnh/v1.2.4/subworkflows/lists_to_reads_records.cwl
     in:
@@ -76,7 +82,7 @@ steps:
       input_se_reads: input_se_reads
       input_pe_rg_strs: input_pe_rg_strs
       input_se_rg_strs: input_se_rg_strs
-      is_paired_end: is_paired_end
+      is_paired_end: determine_read_layout/is_paired_end
       r1_adapter: r1_adapter
       r2_adapter: r2_adapter
       min_len: min_len
@@ -121,7 +127,7 @@ steps:
       cores: cores
       ram: ram
       idx_prefix: idx_prefix
-      is_paired_end: is_paired_end
+      is_paired_end: determine_read_layout/is_paired_end
       fastq_reads: extract_reads_from_record/reads
       output_basename: basename_picker/outname
     out: [graft_fastqs, host_fastqs, ambiguous_fastqs, both_fastqs, neither_fastqs, output_stats]
