@@ -19,7 +19,7 @@ arguments:
     shellQuote: false
     valueFrom: >-
       && xenome classify
-      --pairs
+      ${ return inputs.is_paired_end === true ? "--pairs" : ""; }
       -M ${ return Math.floor(inputs.ram * (4/5)) }
       --output-filename-prefix $(inputs.output_basename)
   - position: 5
@@ -34,6 +34,7 @@ inputs:
   cores: {type: "int?", inputBinding: {prefix: -T, position: 4}, doc: "Num cores to use", default: 8}
   ram: {type: "int?", doc: "Mem to use in GB", default: 8}
   idx_prefix: {type: string, inputBinding: {prefix: -P, position: 4}, doc: "String prefix of index files when decompressed"}
+  is_paired_end: {type: boolean, doc: "Whether fastq_reads contains paired-end reads. Required so Xenome cannot silently classify paired reads independently."}
   fastq_reads: 
     type:
       type: array
@@ -48,11 +49,23 @@ outputs:
   graft_fastqs:
     type: 'File[]'
     outputBinding:
-      glob: '*$(inputs.graft_name)*.fastq'
+      glob: '$(inputs.output_basename)_$(inputs.graft_name)*.fastq'
   host_fastqs:
     type: 'File[]'
     outputBinding:
-      glob: '*$(inputs.host_name)*.fastq'
+      glob: '$(inputs.output_basename)_$(inputs.host_name)*.fastq'
+  ambiguous_fastqs:
+    type: 'File[]'
+    outputBinding:
+      glob: '$(inputs.output_basename)_ambiguous*.fastq'
+  both_fastqs:
+    type: 'File[]'
+    outputBinding:
+      glob: '$(inputs.output_basename)_both*.fastq'
+  neither_fastqs:
+    type: 'File[]'
+    outputBinding:
+      glob: '$(inputs.output_basename)_neither*.fastq'
   output_stats:
     type: File
     outputBinding:
